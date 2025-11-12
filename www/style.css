@@ -1,8 +1,8 @@
 /* ===== MODERN DESIGN SYSTEM ===== */
 :root {
     /* Color System - Modern Dark Theme */
-    --primary-color: #6366f1;
-    --primary-hover: #4f46e5;
+    --primary-color: #0d6efd;
+    --primary-hover: #0d6efd;
     --primary-light: #a5b4fc;
     --secondary-color: #64748b;
     --success-color: #10b981;
@@ -743,7 +743,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 .card-subtitle {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-lg);
     margin: 0;
 }
 
@@ -753,17 +752,16 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     display: flex;
     align-items: center;
     gap: var(--space-xs);
-    opacity: 0.8;
 }
 
 .customer-info i, .user-info i {
     font-size: var(--font-size-xs);
-    opacity: 0.7;
 }
 
 /* ===== CARD BODY SECTION ===== */
 .timesheet-card-body {
-    padding: var(--space-xl);
+    padding-left: var(--space-xl);
+    padding-bottom: var(--space-lg);
     cursor: pointer;
     transition: all var(--transition-base);
     position: relative;
@@ -778,18 +776,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     outline-offset: -2px;
 }
 
-.card-description {
-    margin-bottom: var(--space-lg);
-}
-
 .description-text {
     font-size: var(--font-size-base);
     color: var(--text-primary);
     margin: 0;
     line-height: 1.6;
     word-break: break-word;
-    font-style: italic;
-    opacity: 0.9;
 }
 
 .card-details {
@@ -938,11 +930,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     width: 2px;
     background: linear-gradient(180deg, var(--border-color), transparent);
     opacity: 0.3;
-}
-
-.timesheet-card {
-    position: relative;
-    margin-left: var(--space-md);
 }
 
 .timesheet-card::after {

@@ -135,7 +135,7 @@ function renderTimesheet(data){
                 {
                     item[1].forEach(function(listItem,listItemKey){
                         desc = listItem.description;
-                        if(desc == null) desc='<span class="text-secondary fst-italic">[No description]</span>';
+                        if(desc == null) desc='<span class="text-secondary fst-italic"></span>';
                         desc = desc.replace("/\n/g","<br/>");
                         desc = desc.replace("/\r/g\n","<br/>");
 
@@ -159,14 +159,14 @@ function renderTimesheet(data){
                         } else if (typeof(listItem.tags) !== "undefined" && listItem.tags) {
                             tags = [listItem.tags];
                         }
-                        var tagsText = tags.length > 0 ? tags.join(', ') : 'No tags';
+                        var tagsText = tags.length > 0 ? tags.join(', ') : '';
                         
                         // Format time for better display
                         var startTime = moment(listItem.begin).format('HH:mm');
                         var endTime = moment(listItem.end).format('HH:mm');
                         
                         htmlDataItems+=`
-    <div class="timesheet-card mb-3" role="listitem">
+    <div class="timesheet-card" role="listitem" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'" role="button" tabindex="0" aria-label="View details" onkeydown="if(event.key==='Enter'||event.key===' '){window.location.href='/detail.html?timesheet=${listItem.id}'}">
         <div class="timesheet-card-header" style="border-left: 4px solid ${projectColor};">
             <div class="timesheet-time-info">
                 <div class="timesheet-time-range">
@@ -213,10 +213,12 @@ function renderTimesheet(data){
                         <i class="fas fa-tasks" aria-hidden="true"></i>
                         ${activityName}
                     </span>
-                    <span class="tags-list">
-                        <i class="fas fa-tags" aria-hidden="true"></i>
-                        ${tagsText}
-                    </span>
+                    ${ (tagsText) ? `
+                        <span class="tags-list">
+                            <i class="fas fa-tags" aria-hidden="true"></i>
+                            ${tagsText}
+                        </span>
+                    ` : ''}
                 </div>
                 <p class="description-text">${desc}</p>
             </div>

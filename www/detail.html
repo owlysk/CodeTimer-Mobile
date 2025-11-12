@@ -64,7 +64,7 @@
 
         <div class="border border-1 mt-3 p-1 d-inline-block w-100">
             <div class="row">
-                <div class="col-12 col-sm-4 m-1 text-center d-flex flex-row">
+                <div class="col-12 col-sm-5 m-1 text-center d-flex flex-row">
                     <div class="d-inline-block">
                         <i class="fas fa-clock"></i>
                     </div>
@@ -78,18 +78,14 @@
                 </div>
 
 
-                <div class="col-12 col-sm-3 m-1 text-center d-flex flex-row">
+                <div class="col-12 col-sm-5 m-1 text-center d-flex flex-row">
                     <div class="d-inline-block">
                         <i class="fas fa-calendar-day"></i>
                     </div>
-                    <div class="d-inline-block w-75">
-                        <input type="text" name="date" id="date" class="text-center bg-transparent border-0 w-75" value="01.01.2023" />
+                    <div class="d-inline-block time px-2">
+                        <input type="text" name="date" id="date" class="text-center bg-transparent border-0 w-100" value="01.01.2025" />
                     </div>
-                </div>
-
-
-                <div class="col-6 col-sm-3 m-1 text-end">
-                    <div class="total">
+                    <div class="total time px-2">
                         <input type="text" name="time_total" id="time_total" class="text-center bg-transparent border-0 w-100 text-secondary" readonly="readonly" disabled="disabled" value="00:11:00" />
                     </div>
                 </div>
@@ -169,7 +165,7 @@
             </div>
         </div>
 
-        <div class="user my-2">
+        <div class="user my-2" style="display: none;">
             <label for="userSelect" class="form-label">User</label>
             <div class="custom-dropdown" id="userDropdown">
                 <div class="dropdown-selected" id="userSelected">
