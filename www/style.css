@@ -86,6 +86,17 @@ html, body {
     margin: 0 auto;
     padding: var(--space-lg);
     position: relative;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+}
+
+/* Ensure Bootstrap rows work properly on small devices */
+.row.list-data {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 /* ===== HEADER STYLES ===== */
@@ -603,6 +614,9 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     backdrop-filter: blur(10px);
     overflow: hidden;
     position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .timesheet-card:hover {
@@ -632,8 +646,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     grid-row: 2 / 3 !important;
     justify-self: start !important;
     min-width: 0 !important;
+    max-width: 100% !important;
     margin: 0 !important;
     padding-top: 0.25rem !important;
+    overflow: hidden !important;
 }
 
 .timesheet-actions {
@@ -733,6 +749,9 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     align-items: center;
     gap: var(--space-sm);
     line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .card-title i {
@@ -752,6 +771,9 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     display: flex;
     align-items: center;
     gap: var(--space-xs);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .customer-info i, .user-info i {
@@ -765,6 +787,9 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     cursor: pointer;
     transition: all var(--transition-base);
     position: relative;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
 }
 
 .timesheet-card-body:hover {
@@ -782,6 +807,8 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     margin: 0;
     line-height: 1.6;
     word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .card-details {
@@ -919,6 +946,16 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     gap: var(--space-sm);
     margin-left: var(--space-lg);
     position: relative;
+    box-sizing: border-box !important;
+}
+
+.timesheet-entries > .col-12 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .timesheet-entries::before {
@@ -970,7 +1007,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
     
     .timesheet-entries {
-        margin-left: var(--space-md);
+        margin-left: var(--space-md) !important;
     }
     
     .timesheet-entries::before {
@@ -979,7 +1016,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
     
     .timesheet-card {
-        margin-left: var(--space-sm);
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
     
     .timesheet-card::after {
@@ -989,23 +1029,36 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
     
     .timesheet-card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-md);
+        display: grid !important;
+        grid-template-columns: 1fr auto !important;
+        grid-template-rows: auto auto auto !important;
+        gap: var(--space-sm) !important;
+        padding: var(--space-md) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     .timesheet-time-info {
-        width: 100%;
+        grid-column: 1 / -1 !important;
+        grid-row: 1 / 2 !important;
+        width: 50%;
     }
     
     .card-title-section {
+        grid-column: 1 / 2 !important;
+        grid-row: 2 / 3 !important;
         width: 100%;
         margin: 0;
+        min-width: 0 !important;
     }
     
     .timesheet-actions {
-        width: 100%;
-        justify-content: flex-end;
+        grid-column: 2 / 3 !important;
+        grid-row: 2 / 3 !important;
+        align-self: start !important;
+        flex-direction: row !important;
+        gap: var(--space-xs) !important;
+        width: auto !important;
     }
     
     .card-subtitle {
@@ -1058,7 +1111,8 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
     
     .timesheet-entries {
-        margin-left: var(--space-sm);
+        margin-left: var(--space-sm) !important;
+        padding-left: var(--space-md) !important;
     }
     
     .timesheet-entries::before {
@@ -1067,7 +1121,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
     
     .timesheet-card {
-        margin-left: var(--space-xs);
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
     
     .timesheet-card::after {
@@ -1077,19 +1134,46 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     }
     
     .timesheet-card-body {
-        padding: var(--space-lg);
+        padding: var(--space-md) !important;
+        padding-left: var(--space-lg) !important;
     }
     
     .timesheet-card-header {
-        padding: var(--space-md);
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto auto auto !important;
+        gap: var(--space-sm) !important;
+        padding: var(--space-md) !important;
+    }
+    
+    .timesheet-time-info {
+        grid-column: 1 / -1 !important;
+        grid-row: 1 / 2 !important;
+        width: 100%;
+    }
+    
+    .card-title-section {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 / 4 !important;
+        width: 100%;
+        margin: 0;
+        min-width: 0 !important;
+    }
+    
+    .timesheet-actions {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 / 3 !important;
+        flex-direction: none !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: var(--space-sm) !important;
     }
     
     .card-title {
         font-size: var(--font-size-lg);
-    }
-    
-    .card-title-section {
-        margin: 0;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
     
     .card-subtitle {
@@ -1298,7 +1382,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
     border: 2px solid var(--border-color) !important;
     border-radius: var(--border-radius) !important;
     color: var(--text-primary) !important;
-    padding: var(--space-lg) !important;
     font-size: var(--font-size-base) !important;
     line-height: 1.6 !important;
     resize: vertical !important;

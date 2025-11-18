@@ -97,9 +97,39 @@
         </div>
 
         <script type="text/javascript">
-            $(window).on('ready',function() {
-                $('select').select2({
-                    theme: "bootstrap-5",
+            $(function() {
+                $('.js-filter-select').each(function() {
+                    const $select = $(this);
+                    const isMultiple = $select.prop('multiple');
+                    $select.select2({
+                        theme: "bootstrap-5",
+                        placeholder: $select.data('placeholder') || '',
+                        allowClear: !isMultiple,
+                        width: '100%',
+                        minimumResultsForSearch: 0,
+                        dropdownParent: $select.closest('.select-wrapper'),
+                        closeOnSelect: !isMultiple  // Keep dropdown open for multi-select
+                    });
+                    
+                    // Fix dropdown closing issue for multi-select
+                    if (isMultiple) {
+                        // Prevent clicks inside selection from closing dropdown
+                        $select.on('select2:open', function() {
+                            setTimeout(function() {
+                                const $container = $select.next('.select2-container');
+                                const $selection = $container.find('.select2-selection--multiple');
+                                
+                                $selection.on('mousedown', function(e) {
+                                    // Only prevent if not clicking on a choice remove button
+                                    if ($(e.target).closest('.select2-selection__choice__remove').length === 0) {
+                                        if ($(e.target).closest('.select2-selection__choice').length === 0) {
+                                            e.stopPropagation();
+                                        }
+                                    }
+                                });
+                            }, 50);
+                        });
+                    }
                 });
             });
         </script>
@@ -109,7 +139,20 @@
                 background-color: var(--bs-dark);
                 color: var(--bs-light);
             }
-            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered,
+            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--multiple {
+                background: var(--bg-input) !important;
+                border-color: var(--border-color) !important;
+            }
+            [data-bs-theme="dark"] .select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple,
+            [data-bs-theme="dark"] .select2-container--bootstrap-5.select2-container--open .select2-selection--multiple {
+                background: var(--bg-card) !important;
+            }
+            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--multiple .select2-search--inline .select2-search__field {
+                color: var(--bs-light) !important;
+            }
+            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered{
+                color: var(--bs-light);
+            }
             [data-bs-theme="dark"] .select2-results__option.select2-results__message{
                 color: var(--bs-light);
             }
@@ -127,67 +170,148 @@
                 background-color: var(--bs-secondary);
                 color: var(--bs-light) !important;
             }
+            /* Layout tweaks for Select2 so inputs stay aligned */
+            .select-wrapper .select2-container {
+                width: 100% !important;
+                display: block;
+            }
+            .select2-container--bootstrap-5 .select2-selection {
+                display: flex !important;
+                align-items: center !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+                text-align: left !important;
+                width: 100%;
+            }
+            /* Make multi-select (tags) match single-select styling */
+            .select2-container--bootstrap-5 .select2-selection--multiple {
+                background: var(--bg-input) !important;
+                border: 2px solid var(--border-color) !important;
+                border-radius: var(--border-radius) !important;
+                padding: var(--space-md) !important;
+                min-height: 48px !important;
+                transition: all var(--transition-base) !important;
+            }
+            .select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple,
+            .select2-container--bootstrap-5.select2-container--open .select2-selection--multiple {
+                border-color: var(--primary-color) !important;
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+                background: var(--bg-card) !important;
+            }
+            /* Fix floating input field in multi-select */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
+                padding: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-search--inline {
+                display: inline-flex !important;
+                align-items: center !important;
+                flex: 1 1 0% !important;
+                min-width: 0 !important;
+                width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-search--inline .select2-search__field {
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                min-width: 100% !important;
+                height: auto !important;
+                min-height: 1.5em !important;
+                background: transparent !important;
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
+            }
+            /* Fix tag (multi-select) choice styling */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+                background-color: var(--bs-secondary) !important;
+                color: var(--bs-light) !important;
+                border: 1px solid var(--bs-light) !important;
+                border-radius: var(--border-radius-sm) !important;
+                padding: 0.25rem 0.5rem !important;
+                margin: 0 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 0.25rem !important;
+                flex: 0 0 auto !important;
+                flex-shrink: 0 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__display {
+                color: var(--bs-light) !important;
+                padding: 0 !important;
+            }
+            /* Make remove button red and visible */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+                color: var(--danger-color) !important;
+                background: transparent !important;
+                border: none !important;
+                margin-right: 0.25rem !important;
+                margin-left: 0 !important;
+                padding: 0 !important;
+                opacity: 1 !important;
+                font-weight: bold !important;
+                font-size: 1.2em !important;
+                line-height: 1 !important;
+                width: 1.2em !important;
+                height: 1.2em !important;
+                min-width: 1.2em !important;
+                min-height: 1.2em !important;
+                cursor: pointer !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-indent: 0 !important;
+                text-align: center !important;
+            }
+            /* Hide default Select2 remove button content */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove > * {
+                display: none !important;
+            }
+            /* Add red X using CSS */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove::before {
+                content: '×' !important;
+                color: var(--danger-color) !important;
+                font-size: 1.5em !important;
+                line-height: 1 !important;
+                font-weight: bold !important;
+                display: inline-block !important;
+                opacity: 1 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
+                color: var(--danger-color) !important;
+                opacity: 1 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover::before {
+                color: var(--danger-color) !important;
+                opacity: 1 !important;
+                transform: scale(1.2);
+            }
         </style>
-        <div class="customer my-2">
+        <div class="customer my-2 select-wrapper">
             <label for="customerSelect" class="form-label">Customer</label>
-            <div class="custom-dropdown" id="customerDropdown">
-                <div class="dropdown-selected" id="customerSelected">
-                    <span class="selected-text">Select Customer</span>
-                    <i class="fas fa-chevron-down dropdown-arrow"></i>
-                </div>
-                <div class="dropdown-options" id="customerOptions">
-                    <!-- Options will be populated by JavaScript -->
-                </div>
-            </div>
+            <select id="customerSelect" class="form-select js-filter-select" data-placeholder="Select Customer"></select>
         </div>
-        <div class="project my-2">
+        <div class="project my-2 select-wrapper">
             <label for="projectSelect" class="form-label">Project</label>
-            <div class="custom-dropdown" id="projectDropdown">
-                <div class="dropdown-selected" id="projectSelected">
-                    <span class="selected-text">Select Project</span>
-                    <i class="fas fa-chevron-down dropdown-arrow"></i>
-                </div>
-                <div class="dropdown-options" id="projectOptions">
-                    <!-- Options will be populated by JavaScript -->
-                </div>
-            </div>
+            <select id="projectSelect" class="form-select js-filter-select" data-placeholder="Select Project"></select>
         </div>
-        <div class="activity my-2">
+        <div class="activity my-2 select-wrapper">
             <label for="activitySelect" class="form-label">Activity</label>
-            <div class="custom-dropdown" id="activityDropdown">
-                <div class="dropdown-selected" id="activitySelected">
-                    <span class="selected-text">Select Activity</span>
-                    <i class="fas fa-chevron-down dropdown-arrow"></i>
-                </div>
-                <div class="dropdown-options" id="activityOptions">
-                    <!-- Options will be populated by JavaScript -->
-                </div>
-            </div>
+            <select id="activitySelect" class="form-select js-filter-select" data-placeholder="Select Activity"></select>
         </div>
-
-        <div class="user my-2" style="display: none;">
-            <label for="userSelect" class="form-label">User</label>
-            <div class="custom-dropdown" id="userDropdown">
-                <div class="dropdown-selected" id="userSelected">
-                    <span class="selected-text">Select User</span>
-                    <i class="fas fa-chevron-down dropdown-arrow"></i>
-                </div>
-                <div class="dropdown-options" id="userOptions">
-                    <!-- Options will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-        <div class="tag my-2">
+        <div class="tag my-2 select-wrapper">
             <label for="tagSelect" class="form-label">Tag</label>
-            <div class="custom-dropdown" id="tagDropdown">
-                <div class="dropdown-selected" id="tagSelected">
-                    <span class="selected-text">Select Tag</span>
-                    <i class="fas fa-chevron-down dropdown-arrow"></i>
-                </div>
-                <div class="dropdown-options" id="tagOptions">
-                    <!-- Options will be populated by JavaScript -->
-                </div>
-            </div>
+            <select id="tagSelect" class="form-select js-filter-select" data-placeholder="Select Tags" multiple></select>
         </div>
         <div class="btns my-2">
             <a href="#" class="btn btn-primary d-block my-2 py-3 save-item" onclick="saveItem()">

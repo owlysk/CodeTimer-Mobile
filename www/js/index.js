@@ -166,61 +166,63 @@ function renderTimesheet(data){
                         var endTime = moment(listItem.end).format('HH:mm');
                         
                         htmlDataItems+=`
-    <div class="timesheet-card" role="listitem" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'" role="button" tabindex="0" aria-label="View details" onkeydown="if(event.key==='Enter'||event.key===' '){window.location.href='/detail.html?timesheet=${listItem.id}'}">
-        <div class="timesheet-card-header" style="border-left: 4px solid ${projectColor};">
-            <div class="timesheet-time-info">
-                <div class="timesheet-time-range">
-                    <span class="time-start">${startTime}</span>
-                    <span class="time-separator">→</span>
-                    <span class="time-end">${endTime}</span>
+    <div class="col-12 mb-3">
+        <div class="timesheet-card" role="listitem" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'" role="button" tabindex="0" aria-label="View details" onkeydown="if(event.key==='Enter'||event.key===' '){window.location.href='/detail.html?timesheet=${listItem.id}'}">
+            <div class="timesheet-card-header" style="border-left: 4px solid ${projectColor};">
+                <div class="timesheet-time-info">
+                    <div class="timesheet-time-range">
+                        <span class="time-start">${startTime}</span>
+                        <span class="time-separator">→</span>
+                        <span class="time-end">${endTime}</span>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="card-title-section">
-                <h3 class="card-title" style="color: ${projectColor};">
-                    <i class="fas fa-folder" aria-hidden="true"></i>
-                    ${projectName}
-                </h3>
-                <div class="card-subtitle">
-                    <span class="customer-info" style="color: ${projectColor}CC;">
-                        <i class="fas fa-building" aria-hidden="true"></i>
-                        ${customerName}
-                    </span>
-                    <span class="user-info" style="color: ${projectColor}CC;">
-                        <i class="fas fa-user" aria-hidden="true"></i>
-                        ${userName}
-                    </span>
-                </div>
-            </div>
-            
-            <div class="timesheet-actions">
-                <!-- moved duration badge here so it's on the right -->
-                <div class="timesheet-duration-badge header-duration">
-                    <i class="fas fa-clock" aria-hidden="true"></i>
-                    <span class="duration-text">${durationTime}</span>
-                </div>
-
-                <a href="#" class="btn btn-sm btn-outline-primary repeat-btn" onclick="repeatItem(${listItem.id}); return false;" title="Repeat this task" aria-label="Repeat this task">
-                    <i class="fas fa-repeat" aria-hidden="true"></i>
-                </a>
-            </div>
-        </div>
-        
-        <div class="timesheet-card-body" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'" role="button" tabindex="0" aria-label="View details" onkeydown="if(event.key==='Enter'||event.key===' '){window.location.href='/detail.html?timesheet=${listItem.id}'}">
-            <div class="card-description">
-                <div class="activity-info" style="background-color: ${activityColor}20; border-left: 3px solid ${activityColor};">
-                    <span class="activity-name" style="color: ${activityColor};">
-                        <i class="fas fa-tasks" aria-hidden="true"></i>
-                        ${activityName}
-                    </span>
-                    ${ (tagsText) ? `
-                        <span class="tags-list">
-                            <i class="fas fa-tags" aria-hidden="true"></i>
-                            ${tagsText}
+                
+                <div class="card-title-section">
+                    <h3 class="card-title" style="color: ${projectColor};">
+                        <i class="fas fa-folder" aria-hidden="true"></i>
+                        ${projectName}
+                    </h3>
+                    <div class="card-subtitle">
+                        <span class="customer-info" style="color: ${projectColor}CC;">
+                            <i class="fas fa-building" aria-hidden="true"></i>
+                            ${customerName}
                         </span>
-                    ` : ''}
+                        <span class="user-info" style="color: ${projectColor}CC;">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                            ${userName}
+                        </span>
+                    </div>
                 </div>
-                <p class="description-text">${desc}</p>
+                
+                <div class="timesheet-actions">
+                    <!-- moved duration badge here so it's on the right -->
+                    <div class="timesheet-duration-badge header-duration">
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        <span class="duration-text">${durationTime}</span>
+                    </div>
+
+                    <a href="#" class="btn btn-sm btn-outline-primary repeat-btn" onclick="repeatItem(${listItem.id}); return false;" title="Repeat this task" aria-label="Repeat this task">
+                        <i class="fas fa-repeat" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="timesheet-card-body" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'" role="button" tabindex="0" aria-label="View details" onkeydown="if(event.key==='Enter'||event.key===' '){window.location.href='/detail.html?timesheet=${listItem.id}'}">
+                <div class="card-description">
+                    <div class="activity-info" style="background-color: ${activityColor}20; border-left: 3px solid ${activityColor};">
+                        <span class="activity-name" style="color: ${activityColor};">
+                            <i class="fas fa-tasks" aria-hidden="true"></i>
+                            ${activityName}
+                        </span>
+                        ${ (tagsText) ? `
+                            <span class="tags-list">
+                                <i class="fas fa-tags" aria-hidden="true"></i>
+                                ${tagsText}
+                            </span>
+                        ` : ''}
+                    </div>
+                    <p class="description-text">${desc}</p>
+                </div>
             </div>
         </div>
     </div>`;
@@ -241,7 +243,7 @@ function renderTimesheet(data){
                             </div>
                         </div>
                     </div>
-                    <div class="timesheet-entries">
+                    <div class="row timesheet-entries g-2">
                         ${htmlDataItems}
                     </div>
                 </div>`;

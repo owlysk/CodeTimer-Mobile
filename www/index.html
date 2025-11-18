@@ -54,7 +54,7 @@
         <!-- Header Section -->
         <header class="header pt-4" role="banner">
             <div class="row">
-                <div class="col-6 col-md-8">
+                <div class="col-6 col-md-8 mb-3">
                     <img src="icons/logo.png" class="logo" onclick="openHomepage()" alt="CodeTimer Logo" role="button" tabindex="0" aria-label="Open homepage" onkeydown="if(event.key==='Enter'||event.key===' ')openHomepage()">
                 </div>
                 <div class="col-6 col-md-4 text-end">
@@ -69,31 +69,26 @@
                     </a>
                 </div>
             </div>
-        </header>
-        <!-- Task Creation Section -->
-        <section class="new-task mt-3" role="main" aria-labelledby="task-creation-heading">
             <h2 id="task-creation-heading" class="visually-hidden">Create New Task</h2>
-            <div class="border border-1 border-secondary p-3 d-inline-block w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="desc-area d-inline-block" style="width: calc(100% - 140px);">
-                            <label for="desc" class="visually-hidden">Task Description</label>
-                            <input type="text" name="desc" id="desc" style="color: #fff;" placeholder="Description of your work" class="w-100 px-2 py-2 bg-transparent border-0" aria-label="Enter task description" autocomplete="off"/>
-                        </div>
-                        <div class="btns-area d-inline-block float-end">
-                            <a href="#" class="btn btn-primary d-inline-block start-btn px-4" onclick="window.location.href='/detail.html?description='+encodeURIComponent($('#desc').val());" role="button" aria-label="Start new task">
-                                <i class="fas fa-play" aria-hidden="true"></i> Start
-                            </a>
-                            <a href="#" class="d-none btn btn-danger d-inline-block stop-btn px-4" onclick="stopItem();return false;" ontouchstart="stopItem();return false;" role="button" aria-label="Stop current task">
-                                <i class="fas fa-stop" aria-hidden="true"></i> 
-                                <span class="stop-hover">Stop</span>
-                                <span class="stop-time" aria-live="polite">00:00:00</span>
-                            </a>
-                        </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="desc-area d-inline-block" style="width: calc(100% - 140px);">
+                        <label for="desc" class="visually-hidden">Task Description</label>
+                        <input type="text" name="desc" id="desc" style="color: #fff;" placeholder="Description of your work" class="w-100 px-2 py-2 bg-transparent border-0" aria-label="Enter task description" autocomplete="off"/>
+                    </div>
+                    <div class="btns-area d-inline-block float-end">
+                        <a href="#" class="btn btn-primary d-inline-block start-btn px-4" onclick="window.location.href='/detail.html?description='+encodeURIComponent($('#desc').val());" role="button" aria-label="Start new task">
+                            <i class="fas fa-play" aria-hidden="true"></i> Start
+                        </a>
+                        <a href="#" class="d-none btn btn-danger d-inline-block stop-btn px-4" onclick="stopItem();return false;" ontouchstart="stopItem();return false;" role="button" aria-label="Stop current task">
+                            <i class="fas fa-stop" aria-hidden="true"></i> 
+                            <span class="stop-hover">Stop</span>
+                            <span class="stop-time" aria-live="polite">00:00:00</span>
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
+        </header>
 
         <!-- Task List Section -->
         <section class="list" role="region" aria-labelledby="task-list-heading">
