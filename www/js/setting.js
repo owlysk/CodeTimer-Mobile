@@ -27,8 +27,6 @@ function checkConnection(host, token){
     return result;
 }
 
-
-
 function renderSettings(){
     loadSettings().then(function(setting){
         $('#host').val(setting.host);

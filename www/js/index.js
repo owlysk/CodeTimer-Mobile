@@ -135,7 +135,7 @@ function renderTimesheet(data){
                 {
                     item[1].forEach(function(listItem,listItemKey){
                         desc = listItem.description;
-                        if(desc == null) desc='<span class="text-secondary fst-italic">[No description]</span>';
+                        if(desc == null) desc='<span class="text-secondary fst-italic"></span>';
                         desc = desc.replace("/\n/g","<br/>");
                         desc = desc.replace("/\r/g\n","<br/>");
 
@@ -143,53 +143,108 @@ function renderTimesheet(data){
 
                         var durationTime = formatDuration(listItem.duration)
                         
+                        // Get project and activity info for better display
+                        var projectName = (typeof(cache._parseProjects[listItem.project])!="undefined") ? cache._parseProjects[listItem.project].name : '---';
+                        var projectColor = (typeof(cache._parseProjects[listItem.project])!="undefined") ? cache._parseProjects[listItem.project].color : '#64748b';
+                        var activityName = (typeof(cache._parseActivities[listItem.activity])!="undefined") ? cache._parseActivities[listItem.activity].name : '---';
+                        var activityColor = (typeof(cache._parseActivities[listItem.activity])!="undefined") ? cache._parseActivities[listItem.activity].color : '#64748b';
+                        var customerName = (typeof(cache._parseProjects[listItem.project])!="undefined") ? cache._parseProjects[listItem.project].parentTitle : '---';
+                        
+                        // Get user information
+                        var userName = (typeof(cache._parseUsers[listItem.user])!="undefined") ? cache._parseUsers[listItem.user].alias : '---';
+                        // Get tags information
+                        var tags = [];
+                        if (typeof(listItem.tags) !== "undefined" && listItem.tags && Array.isArray(listItem.tags)) {
+                            tags = listItem.tags;
+                        } else if (typeof(listItem.tags) !== "undefined" && listItem.tags) {
+                            tags = [listItem.tags];
+                        }
+                        var tagsText = tags.length > 0 ? tags.join(', ') : '';
+                        
+                        // Format time for better display
+                        var startTime = moment(listItem.begin).format('HH:mm');
+                        var endTime = moment(listItem.end).format('HH:mm');
+                        
                         htmlDataItems+=`
-                            <div class="border border-1 border-dark-subtle bg-body p-3 d-inline-block w-100 mb-1">
-                                <div class="item-detail d-inline-block" style="width: calc(100% - 130px);" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'">
-                                    <div class="item-name d-inline-block pb-2" >
-                                        ${desc}
-                                    </div>
-                                    <!--
-                                    <div class="item-customer d-block px-2">
-                                    <li style="color: ${((typeof(cache._parseProjects[listItem.project])!="undefined")?cache._parseProjects[listItem.project].color:'#000')}">${((typeof(cache._parseProjects[listItem.project])!=="undefined")?cache._parseProjects[listItem.project].parentTitle:'---')}</li>
-                                    </div>
-                                    -->
-                                    <div class="item-project d-block px-2">
-                                        <li style="color: ${((typeof(cache._parseProjects[listItem.project])!="undefined")?cache._parseProjects[listItem.project].color:'#000')}">${((typeof(cache._parseProjects[listItem.project])!=="undefined")?cache._parseProjects[listItem.project].name:'---')}</li>
-                                    </div>
-                                    <div class="item-activity d-block px-2">
-                                    <li style="color: ${((typeof(cache._parseActivities[listItem.activity])!=="undefined")?cache._parseActivities[listItem.activity].color:'#000')}">${((typeof(cache._parseActivities[listItem.activity])!=="undefined")?cache._parseActivities[listItem.activity].name:'---')}</li>
-                                    </div>
-                                </div>
-                                <div class="item-btns d-inline-block float-end">
-                                    <div class="item-total py-1 px-2 d-inline-block">
-                                        ${durationTime}
-                                    </div>
-                                    <div class="d-none btn btn-sm btn-primary d-inline-block detail-btn">
-                                        <i class="fas fa-search"></i>
-                                    </div>
-                                    <a href="#" class="btn btn-sm btn-primary d-inline-block repeat-btn" onclick="repeatItem(${listItem.id}); return false;">
-                                        <i class="fas fa-repeat"></i>
-                                    </a>
-                                </div>
-                            </div>`;
-                            
+    <div class="col-12 mb-3">
+        <div class="timesheet-card" role="listitem" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'" role="button" tabindex="0" aria-label="View details" onkeydown="if(event.key==='Enter'||event.key===' '){window.location.href='/detail.html?timesheet=${listItem.id}'}">
+            <div class="timesheet-card-header" style="border-left: 4px solid ${projectColor};">
+                <div class="timesheet-time-info">
+                    <div class="timesheet-time-range">
+                        <span class="time-start">${startTime}</span>
+                        <span class="time-separator">→</span>
+                        <span class="time-end">${endTime}</span>
+                    </div>
+                </div>
+                
+                <div class="card-title-section">
+                    <h3 class="card-title" style="color: ${projectColor};">
+                        <i class="fas fa-folder" aria-hidden="true"></i>
+                        ${projectName}
+                    </h3>
+                    <div class="card-subtitle">
+                        <span class="customer-info" style="color: ${projectColor}CC;">
+                            <i class="fas fa-building" aria-hidden="true"></i>
+                            ${customerName}
+                        </span>
+                        <span class="user-info" style="color: ${projectColor}CC;">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                            ${userName}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="timesheet-actions">
+                    <!-- moved duration badge here so it's on the right -->
+                    <div class="timesheet-duration-badge header-duration">
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        <span class="duration-text">${durationTime}</span>
+                    </div>
+
+                    <a href="#" class="btn btn-sm btn-outline-primary repeat-btn" onclick="repeatItem(${listItem.id}); return false;" title="Repeat this task" aria-label="Repeat this task">
+                        <i class="fas fa-repeat" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="timesheet-card-body" onclick="window.location.href='/detail.html?timesheet=${listItem.id}'" role="button" tabindex="0" aria-label="View details" onkeydown="if(event.key==='Enter'||event.key===' '){window.location.href='/detail.html?timesheet=${listItem.id}'}">
+                <div class="card-description">
+                    <div class="activity-info" style="background-color: ${activityColor}20; border-left: 3px solid ${activityColor};">
+                        <span class="activity-name" style="color: ${activityColor};">
+                            <i class="fas fa-tasks" aria-hidden="true"></i>
+                            ${activityName}
+                        </span>
+                        ${ (tagsText) ? `
+                            <span class="tags-list">
+                                <i class="fas fa-tags" aria-hidden="true"></i>
+                                ${tagsText}
+                            </span>
+                        ` : ''}
+                    </div>
+                    <p class="description-text">${desc}</p>
+                </div>
+            </div>
+        </div>
+    </div>`;
                     });
                 }
                 
                 htmlData+= `
-                <div class="col-12 date-item">
-                    <br/>
-                    <div class="border border-1 border-dark-subtle bg-secondary-subtle p-1 pb-0 d-inline-block w-100">
-                        <div class="date py-1 px-2 d-inline-block">
-                            ${item[0]}
+                <div class="col-12 date-section mb-4">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <div class="date-badge">
+                                <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                                <span class="date-text">${item[0]}</span>
+                            </div>
+                            <div class="date-total">
+                                <i class="fas fa-clock" aria-hidden="true"></i>
+                                <span class="total-text">Total: ${formatDuration(totalDayTime)}</span>
+                            </div>
                         </div>
-                        <div class="total py-1 px-2 d-inline-block float-end">
-                            Total: ${formatDuration(totalDayTime)}
-                        </div>
-                `;
-                htmlData+=htmlDataItems;
-                htmlData+=`
+                    </div>
+                    <div class="row timesheet-entries g-2">
+                        ${htmlDataItems}
                     </div>
                 </div>`;
                

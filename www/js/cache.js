@@ -7,6 +7,8 @@ async function loadCache(){
             projects: {},
             customers: {},
             activities: {},
+            users: {},
+            tags: {},
             timestamp: 0,
         };
     }
@@ -23,13 +25,16 @@ async function refreshCache(){
     var projects = api.makeAPICall("get","/api/projects");
     var customers = api.makeAPICall("get","/api/customers");
     var activities = api.makeAPICall("get","/api/activities");
-
+    var users = api.makeAPICall("get","/api/users");
+    var tags = api.makeAPICall("get","/api/tags");
     var timestamp = Date.now()/1000;
 
     cache = {
         projects: projects,
         customers: customers,
         activities: activities,
+        users: users,
+        tags: tags,
         timestamp: timestamp,
     };
 
@@ -61,8 +66,6 @@ async function initCache(){
 }
 
 async function checkCache(){
-
-    
     if((cache.timestamp + (1*60*60)) < (Date.now()/1000) || typeof(cache) ==="undefined" || typeof(cache) == "null")
     {
         if(debug) console.log('refreshCache now',cache.timestamp, Date.now())
@@ -98,6 +101,22 @@ async function processCache(){
     {
         cache.activities.forEach(function(item,key){
             cache._parseActivities[item.id]=item;
+        });
+    }
+
+    cache._parseUsers = [];
+    if((cache.users).length>0)
+    {
+        cache.users.forEach(function(item,key){
+            cache._parseUsers[item.id]=item;
+        });
+    }
+    
+    cache._parseTags = [];
+    if((cache.tags).length>0)
+    {
+        cache.tags.forEach(function(item,key){
+            cache._parseTags[item.id]=item;
         });
     }
 }

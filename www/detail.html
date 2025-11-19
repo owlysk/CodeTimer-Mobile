@@ -3,43 +3,52 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CodeTimer Mobile</title>
+    <title>CodeTimer Mobile - Task Details</title>
+    <meta name="description" content="Edit and manage your time tracking tasks with detailed controls and project assignment.">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
+    <!-- Preload critical resources -->
+    <link rel="preload" href="lib/fontawesome/css/all.min.css" as="style">
+    <link rel="preload" href="style.css" as="style">
+    
+    <!-- Stylesheets -->
     <link href="lib/bootstrap/bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="lib/fontawesome/css/all.min.css" rel="stylesheet" />
-    <script src="lib/bootstrap/bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/jquery/dist/jquery.min.js"></script>   
     <link href="style.css" rel="stylesheet"/>
     
-    <script src="lib/select2/dist/js/select2.min.js"></script>
+    <!-- Select2 Styles -->
     <link href="lib/select2/dist/css/select2.min.css" rel="stylesheet"/>
     <link href="lib/select2/select2-bootstrap-5-theme.min.css" rel="stylesheet"/>
     
-
+    <!-- Scripts -->
+    <script src="lib/bootstrap/bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>   
     <script src="lib/moment/moment.min.js"></script>
-    
+    <script src="lib/select2/dist/js/select2.min.js"></script>
   </head>
-  <body data-bs-theme="dark">
+  <body data-bs-theme="dark" role="application" aria-label="CodeTimer Task Details">
     <!-- Modal -->
       
-    <div class="modal modal-sm fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Loading Modal -->
+    <div class="modal modal-sm fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="text-end mx-2 my-1">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close loading dialog"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <div class="loading fs-5 py-2">
+                    <div class="loading fs-5 py-2" role="status" aria-live="polite">
                         <span class="spinner-border spinner-border" role="status" aria-hidden="true"></span>
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    Loading...
+                    <div id="loadingModalLabel">Loading...</div>
                 </div>
             </div>
         </div>
     </div>
   
-    
-
     <div class="container">
         <div class="header pt-4">
             <div class="row">
@@ -53,27 +62,30 @@
             </div>
         </div>
 
-        <div class="border border-1 border-dark-subtle bg-secondary-subtle mt-3 p-1 pb-0 d-inline-block w-100">
+        <div class="border border-1 mt-3 p-1 d-inline-block w-100">
             <div class="row">
-                <div class="col-12 col-sm-4 text-center d-flex flex-row">
+                <div class="col-12 col-sm-5 m-1 text-center d-flex flex-row">
+                    <div class="d-inline-block">
+                        <i class="fas fa-clock"></i>
+                    </div>
                     <div class="time px-2">
                         <input type="text" name="time_from" id="time_from" class="text-center bg-transparent border-0 w-100" value="11:00" />
                     </div>
-                    -
+                    <span class="time-separator">→</span>
                     <div class="time px-2">
                         <input type="text" name="time_to" id="time_to" class="text-center bg-transparent border-0 w-100" value="12:00" />
                     </div>
                 </div>
-                <div class="col-6 col-sm-4 text-center">
-                    <div class="d-inline-block mx-2">
+
+
+                <div class="col-12 col-sm-5 m-1 text-center d-flex flex-row">
+                    <div class="d-inline-block">
                         <i class="fas fa-calendar-day"></i>
                     </div>
-                    <div class="date d-inline-block w-75">
-                        <input type="text" name="date" id="date" class="text-center bg-transparent border-0 w-75" value="01.01.2023" />
+                    <div class="d-inline-block time px-2">
+                        <input type="text" name="date" id="date" class="text-center bg-transparent border-0 w-100" value="01.01.2025" />
                     </div>
-                </div>
-                <div class="col-6 col-sm-4 text-end">
-                    <div class="total">
+                    <div class="total time px-2">
                         <input type="text" name="time_total" id="time_total" class="text-center bg-transparent border-0 w-100 text-secondary" readonly="readonly" disabled="disabled" value="00:11:00" />
                     </div>
                 </div>
@@ -85,9 +97,39 @@
         </div>
 
         <script type="text/javascript">
-            $(window).on('ready',function() {
-                $('select').select2({
-                    theme: "bootstrap-5",
+            $(function() {
+                $('.js-filter-select').each(function() {
+                    const $select = $(this);
+                    const isMultiple = $select.prop('multiple');
+                    $select.select2({
+                        theme: "bootstrap-5",
+                        placeholder: $select.data('placeholder') || '',
+                        allowClear: !isMultiple,
+                        width: '100%',
+                        minimumResultsForSearch: 0,
+                        dropdownParent: $select.closest('.select-wrapper'),
+                        closeOnSelect: !isMultiple  // Keep dropdown open for multi-select
+                    });
+                    
+                    // Fix dropdown closing issue for multi-select
+                    if (isMultiple) {
+                        // Prevent clicks inside selection from closing dropdown
+                        $select.on('select2:open', function() {
+                            setTimeout(function() {
+                                const $container = $select.next('.select2-container');
+                                const $selection = $container.find('.select2-selection--multiple');
+                                
+                                $selection.on('mousedown', function(e) {
+                                    // Only prevent if not clicking on a choice remove button
+                                    if ($(e.target).closest('.select2-selection__choice__remove').length === 0) {
+                                        if ($(e.target).closest('.select2-selection__choice').length === 0) {
+                                            e.stopPropagation();
+                                        }
+                                    }
+                                });
+                            }, 50);
+                        });
+                    }
                 });
             });
         </script>
@@ -97,7 +139,20 @@
                 background-color: var(--bs-dark);
                 color: var(--bs-light);
             }
-            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered,
+            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--multiple {
+                background: var(--bg-input) !important;
+                border-color: var(--border-color) !important;
+            }
+            [data-bs-theme="dark"] .select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple,
+            [data-bs-theme="dark"] .select2-container--bootstrap-5.select2-container--open .select2-selection--multiple {
+                background: var(--bg-card) !important;
+            }
+            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--multiple .select2-search--inline .select2-search__field {
+                color: var(--bs-light) !important;
+            }
+            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered{
+                color: var(--bs-light);
+            }
             [data-bs-theme="dark"] .select2-results__option.select2-results__message{
                 color: var(--bs-light);
             }
@@ -115,25 +170,149 @@
                 background-color: var(--bs-secondary);
                 color: var(--bs-light) !important;
             }
+            /* Layout tweaks for Select2 so inputs stay aligned */
+            .select-wrapper .select2-container {
+                width: 100% !important;
+                display: block;
+            }
+            .select2-container--bootstrap-5 .select2-selection {
+                display: flex !important;
+                align-items: center !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+                text-align: left !important;
+                width: 100%;
+            }
+            /* Make multi-select (tags) match single-select styling */
+            .select2-container--bootstrap-5 .select2-selection--multiple {
+                background: var(--bg-input) !important;
+                border: 2px solid var(--border-color) !important;
+                border-radius: var(--border-radius) !important;
+                padding: var(--space-md) !important;
+                min-height: 48px !important;
+                transition: all var(--transition-base) !important;
+            }
+            .select2-container--bootstrap-5.select2-container--focus .select2-selection--multiple,
+            .select2-container--bootstrap-5.select2-container--open .select2-selection--multiple {
+                border-color: var(--primary-color) !important;
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+                background: var(--bg-card) !important;
+            }
+            /* Fix floating input field in multi-select */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
+                padding: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-search--inline {
+                display: inline-flex !important;
+                align-items: center !important;
+                flex: 1 1 0% !important;
+                min-width: 0 !important;
+                width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-search--inline .select2-search__field {
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                min-width: 100% !important;
+                height: auto !important;
+                min-height: 1.5em !important;
+                background: transparent !important;
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
+            }
+            /* Fix tag (multi-select) choice styling */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+                background-color: var(--bs-secondary) !important;
+                color: var(--bs-light) !important;
+                border: 1px solid var(--bs-light) !important;
+                border-radius: var(--border-radius-sm) !important;
+                padding: 0.25rem 0.5rem !important;
+                margin: 0 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 0.25rem !important;
+                flex: 0 0 auto !important;
+                flex-shrink: 0 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__display {
+                color: var(--bs-light) !important;
+                padding: 0 !important;
+            }
+            /* Make remove button red and visible */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+                color: var(--danger-color) !important;
+                background: transparent !important;
+                border: none !important;
+                margin-right: 0.25rem !important;
+                margin-left: 0 !important;
+                padding: 0 !important;
+                opacity: 1 !important;
+                font-weight: bold !important;
+                font-size: 1.2em !important;
+                line-height: 1 !important;
+                width: 1.2em !important;
+                height: 1.2em !important;
+                min-width: 1.2em !important;
+                min-height: 1.2em !important;
+                cursor: pointer !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-indent: 0 !important;
+                text-align: center !important;
+            }
+            /* Hide default Select2 remove button content */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove > * {
+                display: none !important;
+            }
+            /* Add red X using CSS */
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove::before {
+                content: '×' !important;
+                color: var(--danger-color) !important;
+                font-size: 1.5em !important;
+                line-height: 1 !important;
+                font-weight: bold !important;
+                display: inline-block !important;
+                opacity: 1 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
+                color: var(--danger-color) !important;
+                opacity: 1 !important;
+            }
+            .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover::before {
+                color: var(--danger-color) !important;
+                opacity: 1 !important;
+                transform: scale(1.2);
+            }
         </style>
-        <div class="customer my-2">
-            <label for="customerSelect">Customer</label>
-            <select class="form-select" id="customerSelect" aria-label="Customer">
-            </select>            
+        <div class="customer my-2 select-wrapper">
+            <label for="customerSelect" class="form-label">Customer</label>
+            <select id="customerSelect" class="form-select js-filter-select" data-placeholder="Select Customer"></select>
         </div>
-        <div class="project my-2">
-            <label for="projectSelect">Project</label>
-            <select class="form-select" id="projectSelect" aria-label="Project">
-            </select>
+        <div class="project my-2 select-wrapper">
+            <label for="projectSelect" class="form-label">Project</label>
+            <select id="projectSelect" class="form-select js-filter-select" data-placeholder="Select Project"></select>
         </div>
-        <div class="activity my-2">
-            <div class="project my-2">
-                <label for="activitySelect">Activity</label>
-                <select class="form-select" id="activitySelect" aria-label="Activity">
-                </select>
-            </div>
+        <div class="activity my-2 select-wrapper">
+            <label for="activitySelect" class="form-label">Activity</label>
+            <select id="activitySelect" class="form-select js-filter-select" data-placeholder="Select Activity"></select>
         </div>
-
+        <div class="tag my-2 select-wrapper">
+            <label for="tagSelect" class="form-label">Tag</label>
+            <select id="tagSelect" class="form-select js-filter-select" data-placeholder="Select Tags" multiple></select>
+        </div>
         <div class="btns my-2">
             <a href="#" class="btn btn-primary d-block my-2 py-3 save-item" onclick="saveItem()">
                 <i class="fas fa-save"></i> <span class="text">Save</span>

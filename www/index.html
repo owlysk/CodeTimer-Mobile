@@ -3,33 +3,46 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CodeTimer Mobile</title>
-
+    <title>CodeTimer Mobile - Time Tracking Made Simple</title>
+    <meta name="description" content="Professional time tracking app for Kimai integration. Track your work time efficiently with modern design and intuitive interface.">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CodeTimer">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="lib/fontawesome/css/all.min.css" as="style">
+    <link rel="preload" href="style.css" as="style">
+    
+    <!-- Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline';">
 
+    <!-- Stylesheets -->
     <link href="lib/bootstrap/bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="lib/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet"/>
+    
+    <!-- Scripts -->
     <script src="lib/bootstrap/bootstrap-5.3.0-alpha3-dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/jquery/dist/jquery.min.js"></script>   
-
     <script src="lib/moment/moment.min.js"></script>
-
-    <link href="style.css" rel="stylesheet"/>
   </head>
-  <body data-bs-theme="dark">
+  <body data-bs-theme="dark" role="application" aria-label="CodeTimer Mobile Application">
     <!-- Modal -->
       
-    <div class="modal modal-sm fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Loading Modal -->
+    <div class="modal modal-sm fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="text-end mx-2 my-1">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close loading dialog"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <div class="loading fs-5 py-2">
+                    <div class="loading fs-5 py-2" role="status" aria-live="polite">
                         <span class="spinner-border spinner-border" role="status" aria-hidden="true"></span>
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    Loading...
+                    <div id="loadingModalLabel">Loading...</div>
                 </div>
             </div>
         </div>
@@ -38,41 +51,51 @@
     
 
     <div class="container">
-        <div class="header pt-4">
+        <!-- Header Section -->
+        <header class="header pt-4" role="banner">
             <div class="row">
-                <div class="col-6 col-md-8">
-                        <img src="icons/logo.png" class="logo" onclick="openHomepage()">
+                <div class="col-6 col-md-8 mb-3">
+                    <img src="icons/logo.png" class="logo" onclick="openHomepage()" alt="CodeTimer Logo" role="button" tabindex="0" aria-label="Open homepage" onkeydown="if(event.key==='Enter'||event.key===' ')openHomepage()">
                 </div>
                 <div class="col-6 col-md-4 text-end">
-                    <a href="#" class="btn btn-sm btn-primary" onclick="refreshHomepage()"><i class="fas fa-refresh"></i> <span class="d-none d-sm-inline-block">Refresh</span></a>
-                    <a href="./setting.html" class="btn btn-sm btn-primary"><i class="fas fa-sliders"></i> <span class="d-none d-sm-inline-block">Settings</span><i class="update-dot text-danger fas fa-circle"></i></a>
+                    <a href="#" class="btn btn-sm btn-primary" onclick="refreshHomepage()" role="button" aria-label="Refresh data">
+                        <i class="fas fa-refresh" aria-hidden="true"></i> 
+                        <span class="d-none d-sm-inline-block">Refresh</span>
+                    </a>
+                    <a href="./setting.html" class="btn btn-sm btn-primary" role="button" aria-label="Open settings">
+                        <i class="fas fa-sliders" aria-hidden="true"></i> 
+                        <span class="d-none d-sm-inline-block">Settings</span>
+                        <i class="update-dot text-danger fas fa-circle" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="new-task mt-3">
-            <div class="border border-1 border-secondary p-3 d-inline-block w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="desc-area d-inline-block" style="width: calc(100% - 120px);">
-                            <input type="text" name="desc" id="desc" style="color: #fff;" placeholder="Description of your work" class="w-100 px-2 py-2 bg-transparent border-0"/>
-                        </div>
-                        <div class="btns-area d-inline-block float-end">
-                            <a href="#" class="btn  btn-primary d-inline-block start-btn px-4" onclick="window.location.href='/detail.html?description='+encodeURIComponent($('#desc').val());">
-                                <i class="fas fa-play"></i> Start
-                            </a>
-                            <a href="#" class="d-none btn btn-danger d-inline-block stop-btn px-4" onclick="stopItem();return false;" ontouchstart="stopItem();return false;">
-                                <i class="fas fa-stop"></i> <span class="stop-hover">Stop</span><span class="stop-time">00:00:00</span>
-                            </a>
-                        </div>
+            <h2 id="task-creation-heading" class="visually-hidden">Create New Task</h2>
+            <div class="row">
+                <div class="col-12">
+                    <div class="desc-area d-inline-block" style="width: calc(100% - 140px);">
+                        <label for="desc" class="visually-hidden">Task Description</label>
+                        <input type="text" name="desc" id="desc" style="color: #fff;" placeholder="Description of your work" class="w-100 px-2 py-2 bg-transparent border-0" aria-label="Enter task description" autocomplete="off"/>
+                    </div>
+                    <div class="btns-area d-inline-block float-end">
+                        <a href="#" class="btn btn-primary d-inline-block start-btn px-4" onclick="window.location.href='/detail.html?description='+encodeURIComponent($('#desc').val());" role="button" aria-label="Start new task">
+                            <i class="fas fa-play" aria-hidden="true"></i> Start
+                        </a>
+                        <a href="#" class="d-none btn btn-danger d-inline-block stop-btn px-4" onclick="stopItem();return false;" ontouchstart="stopItem();return false;" role="button" aria-label="Stop current task">
+                            <i class="fas fa-stop" aria-hidden="true"></i> 
+                            <span class="stop-hover">Stop</span>
+                            <span class="stop-time" aria-live="polite">00:00:00</span>
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <div class="list">
-            <div class="row list-data">
+        <!-- Task List Section -->
+        <section class="list" role="region" aria-labelledby="task-list-heading">
+            <h2 id="task-list-heading" class="visually-hidden">Task List</h2>
+            <div class="row list-data" role="list" aria-live="polite">
             </div>
-        </div>
+        </section>
     </div>
 
     <script src="cordova.js"></script>
