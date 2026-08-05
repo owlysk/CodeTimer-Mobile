@@ -41,7 +41,7 @@
 
     <div class="container">
         <div class="header pt-4">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-6 col-md-8">
                     <img src="icons/logo.png" class="logo" onclick="openHomepage()">
                 </div>
@@ -53,46 +53,41 @@
             </div>
         </div>
 
-        <div class="mt-3 p-1 pb-0 d-inline-block w-100">
-            <div class="row">
-                <div class="col-12 mb-2">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="host" placeholder="kimai.org" value="">
-                        <label for="host">Host</label>
-                    </div>
-                </div>
-                <div class="col-12 mb-2">
-                    <div class="form-floating">
-                        <input type="password" class="form-control" id="token" placeholder="*****" value="">
-                        <label for="token">API Token</label>
-                    </div>
-                </div>
-                <br/><br/>
-                <div class="row">
-                    <div class="col-12">
-                        <p><i class="fas fa-circle-question"></i> Go to your Kimai app and fill <i><u>host</u></i> and <i><u> API token</u></i> data from your user account!</p>
-                        <p>More info at  <span onclick="window.open('https://github.com/owlysk/CodeTimer-Mobile','_system');"><i class="fab fa-github"></i> <u>GitHub</u></span></p>
-                        <br/>
-                    </div>
-                    <div class="col-6">
-                        <a href="#" class="btn btn-warning w-100" onclick="testConnection()">
-                            <i class="fas fa-satellite-dish"></i> Test
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="#" class="btn btn-primary w-100" onclick="saveSetting()">
-                            <i class="fas fa-save"></i> Save
-                        </a>
-                    </div>
-                </div>
+        <div class="setting-card mt-3">
+            <div class="setting-section-title">Connection</div>
+
+            <div class="setting-field">
+                <label for="host"><i class="fas fa-server"></i> Host</label>
+                <input type="text" class="form-control" id="host" placeholder="kimai.example.com">
+            </div>
+
+            <div class="setting-field">
+                <label for="token"><i class="fas fa-key"></i> API Token</label>
+                <input type="password" class="form-control" id="token" placeholder="Enter your API token">
+            </div>
+
+            <div class="setting-actions mt-4">
+                <a href="#" class="btn btn-outline-warning setting-btn" onclick="testConnection()">
+                    <i class="fas fa-satellite-dish"></i> Test
+                </a>
+                <a href="#" class="btn btn-primary setting-btn" onclick="saveSetting()">
+                    <i class="fas fa-save"></i> Save
+                </a>
             </div>
         </div>
-    </div>
-    <div class="footer text-center pt-2 py-2">
-        <div class="d-none">
-            v. <span class="app-version">0.0.0</span><br/>
+
+        <div class="setting-hint mt-3">
+            <i class="fas fa-circle-info"></i>
+            Go to your Kimai profile and copy the <strong>host URL</strong> and your <strong>API token</strong>.
+            <span class="setting-hint-link" onclick="window.open('https://github.com/owlysk/CodeTimer-Mobile','_system');">
+                <i class="fab fa-github"></i> GitHub
+            </span>
         </div>
-        &copy; 2025 Martin Lačný - Owly 
+    </div>
+
+    <div class="footer text-center">
+        <div class="d-none">v. <span class="app-version">0.0.0</span></div>
+        &copy; 2025 Martin Lačný - Owly
     </div>
 
     <script src="cordova.js"></script>
