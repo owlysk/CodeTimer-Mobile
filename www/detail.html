@@ -81,7 +81,7 @@
         </div>
 
         <div class="description my-2">
-            <textarea style="min-height: 120px;" class="w-100 p-3 bg-transparent" name="desc" id="desc"></textarea>
+            <textarea style="min-height: 120px;" class="w-100 p-3" name="desc" id="desc"></textarea>
         </div>
 
         <script type="text/javascript">
@@ -91,31 +91,6 @@
                 });
             });
         </script>
-        <style>
-            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection,
-            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-dropdown{
-                background-color: var(--bs-dark);
-                color: var(--bs-light);
-            }
-            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered,
-            [data-bs-theme="dark"] .select2-results__option.select2-results__message{
-                color: var(--bs-light);
-            }
-            [data-bs-theme="dark"] .select2-search__field{
-                background-color: transparent !important;
-                color: var(--bs-light) !important;
-            }
-            [data-bs-theme="dark"] .select2-dropdown.select2-dropdown--below,
-            [data-bs-theme="dark"] .select2-container--bootstrap-5.select2-container--focus .select2-selection, 
-            [data-bs-theme="dark"] .select2-container--bootstrap-5.select2-container--open .select2-selection,
-            [data-bs-theme="dark"] .select2-search__field{
-                border-color: var(--bs-light);
-            }
-            [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--highlighted{
-                background-color: var(--bs-secondary);
-                color: var(--bs-light) !important;
-            }
-        </style>
         <div class="customer my-2">
             <label for="customerSelect">Customer</label>
             <select class="form-select" id="customerSelect" aria-label="Customer">
@@ -134,7 +109,7 @@
             </div>
         </div>
 
-        <div class="btns my-2">
+        <div class="btns my-2 pb-4">
             <a href="#" class="btn btn-primary d-block my-2 py-3 save-item" onclick="saveItem()">
                 <i class="fas fa-save"></i> <span class="text">Save</span>
             </a>

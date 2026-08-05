@@ -3,6 +3,7 @@ function testConnection(){
     var token = $('#token').val();
 
     if(host.indexOf('/api')!==-1) host = host.replace('/api','');
+    if(!/^https?:\/\//i.test(host)) host = 'https://' + host;
 
     var result = checkConnection(host,token);
 
@@ -22,6 +23,7 @@ function testConnection(){
 
 function checkConnection(host, token){
     var api = new API();
+    //console.log('checkConnection',host,token);
     api.setCredentials(host,token);
     var result = api.testConnection();
     return result;
@@ -61,6 +63,7 @@ function saveSetting(){
     var token = $('#token').val();
 
     if(host.indexOf('/api')!==-1) host = host.replace('/api','');
+    if(!/^https?:\/\//i.test(host)) host = 'https://' + host;
 
     var min_tray = 0;
     if($('#min_tray').prop('checked')) min_tray=1;
