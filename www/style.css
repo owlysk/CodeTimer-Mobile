@@ -1,7 +1,28 @@
 html,body{
     margin: auto;
     font-size: 14px;
+    padding-top: 15px;
+}
+
+/* cordova-plugin-qrscanner renders the native camera preview behind the
+   WebView, so the page must turn transparent for it to become visible */
+body.qr-scanning{
+    background: transparent !important;
+}
+body.qr-scanning .container,
+body.qr-scanning .footer,
+body.qr-scanning .modal{
+    display: none !important;
+}
+#qrScanCancelWrap{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    text-align: center;
+    z-index: 1050;
     overflow-y: auto;
+    padding-top: 15px;
 }
 .item-detail{
     cursor: pointer;

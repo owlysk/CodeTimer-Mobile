@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CodeTimer</title>
 
-<meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data:">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data:">
 
     <link href="lib/bootstrap/bootstrap-5.3.0-alpha3-dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="lib/fontawesome/css/all.min.css" rel="stylesheet" />
@@ -20,7 +20,15 @@
 
   </head>
   <body data-bs-theme="dark">
-    <!-- Modal -->     
+    <div id="qrScanCancelWrap" class="d-none">
+        <a href="#" class="btn btn-secondary" onclick="toggleQRScanCamera(); return false;">
+            <i class="fas fa-camera-rotate"></i> Switch camera
+        </a>
+        <a href="#" class="btn btn-danger" onclick="cancelQRScan(); return false;">
+            <i class="fas fa-xmark"></i> Cancel scan
+        </a>
+    </div>
+    <!-- Modal -->    
     <div class="modal modal-sm fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -80,6 +88,11 @@
                         </a>
                     </div>
                     <div class="col-6">
+                        <a href="#" class="btn btn-light w-100" onclick="scanQRCodeSetting()">
+                            <i class="fas fa-qrcode"></i> Scan QR Code
+                        </a>
+                    </div>
+                    <div class="col-12 mt-3">
                         <a href="#" class="btn btn-primary w-100" onclick="saveSetting()">
                             <i class="fas fa-save"></i> Save
                         </a>
@@ -101,5 +114,6 @@
     <script src="js/cache.js"></script>
     <script src="js/API.js"></script>
     <script src="js/setting.js"></script>
+    
   </body>
 </html>

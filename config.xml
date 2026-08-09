@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="sk.owly.codetimermobile" version="1.1.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="sk.owly.codetimermobile" version="1.1.6" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>CodeTimer</name>
     <description>CodeTimer for mobile. Simple APP for Kimai time tracking.</description>
     <author email="info@owly.sk" href="https://www.owly.sk">
@@ -7,14 +7,14 @@
     </author>
     <icon src="res/icon.png"/>
 
-    <resource-file src="res/icon.png" target="app/src/main/res/mipmap/icon.png" />
+    <resource-file src="res/icon.png" target="apps/src/main/res/mipmap/icon.png" />
     <platform name="android">
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon_splash.png" />
     </platform>
     <preference name="SplashScreenBackgroundColor" value="#212529" />
 
     <preference name="android-minSdkVersion" value="24"/>
-    <preference name="android-targetSdkVersion" value="35"/>
+    <preference name="android-targetSdkVersion" value="36"/>
 
 
     <content src="index.html" />

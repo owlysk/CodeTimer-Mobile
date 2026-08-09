@@ -99,6 +99,101 @@ function saveSetting(){
     return result;
 }
 
+function scanQRCodeSetting(){
+    QRScanner.prepare(qrScanInitDone); // show the prompt
+}
+
+function qrScanInitDone(err, status){
+  if (err) {
+
+    if(confirm("Would you like to enable QR code scanning? You can allow camera access in your settings."))
+    {
+        QRScanner.openSettings();
+    }
+    // here we can handle errors and clean up any loose ends.
+    console.error(err);
+    return;
+  }
+
+  if(!status.authorized){
+    if(status.canOpenSettings && confirm("Would you like to enable QR code scanning? You can allow camera access in your settings.")){
+      QRScanner.openSettings();
+    }
+    return;
+  }
+
+  startQRScan();
+}
+
+function startQRScan(){
+    // the native camera preview sits behind the WebView, so the page
+    // must turn transparent for it to become visible
+    document.body.classList.add('qr-scanning');
+    $('#qrScanCancelWrap').removeClass('d-none');
+
+    QRScanner.scan(function(err, qrtext){
+        stopQRScan();
+        if(err)
+        {
+            // an error occurred, or the scan was canceled (error code `6`)
+        }
+        else
+        {
+            // The scan completed, display the contents of the QR code:
+            //expecting jsonText
+            try{
+                var jsonText = $.parseJSON(qrtext);
+                if(jsonText.type=="kimai")
+                {
+                    if(jsonText.url!="" && jsonText.token!="")
+                    {
+                        $('#host').val(jsonText.url);
+                        $('#token').val(jsonText.token);
+                        saveSetting();
+
+                        //alert('Kimai loaded!');
+                    }
+                    else alert('QR code is not complete!');
+                }
+            }
+            catch(error){
+                alert('QR code not recognized!');
+            }
+        }
+    });
+
+    QRScanner.show();
+}
+
+function stopQRScan(){
+    QRScanner.hide();
+    QRScanner.destroy();
+    document.body.classList.remove('qr-scanning');
+    $('#qrScanCancelWrap').addClass('d-none');
+}
+
+function cancelQRScan(){
+    QRScanner.cancelScan(stopQRScan);
+}
+
+function toggleQRScanCamera(){
+    QRScanner.getStatus(function(status){
+        if(status.currentCamera === 0){
+            QRScanner.useFrontCamera(function(err){ if(err) console.error(err); });
+        }
+        else{
+            QRScanner.useBackCamera(function(err){ if(err) console.error(err); });
+        }
+    });
+}
+
+document.addEventListener('backbutton', function(e){
+    if(document.body.classList.contains('qr-scanning')){
+        e.preventDefault();
+        cancelQRScan();
+    }
+}, false);
+
 init().then(()=>{
     renderSettings();
 });
